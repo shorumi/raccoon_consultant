@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  postgres_lab_exam:
+    image: postgres:${PG_MAJOR}
+    volumes:
+      - .psqlrc:/root/.psqlrc:ro
+      - postgres-data:/var/lib/postgresql/data
+      - ./log:/root/log:cached
+    expose:
+      - ${POSTGRES_PORT}
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      PSQL_HISTFILE: /root/log/.psql_history
+      POSTGRES_PASSWORD: ${PG_PWD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    env_file:
+      - .env
+
+  appserver:
+    build:
+      context: app
+      dockerfile: Dockerfile
+    image: lab-exam-app
+    depends_on:
+      - postgres_lab_exam
+    expose:
+      - ${WEB_APP_PORT}
+    ports:
+      - ${WEB_APP_PORT}:${WEB_APP_PORT}
+    env_file:
+      - .env
+
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    external:
+      name: dasa_default
