@@ -13,6 +13,7 @@ services:
       - ${POSTGRES_PORT}:5432
     environment:
       PSQL_HISTFILE: /root/log/.psql_history
+      POSTGRES_USER: ${PG_USR}
       POSTGRES_PASSWORD: ${PG_PWD}
       POSTGRES_DB: ${DATABASE_NAME}
     env_file:
@@ -20,7 +21,7 @@ services:
 
   appserver:
     build:
-      context: app
+      context: .
       dockerfile: Dockerfile
     image: lab-exam-app
     depends_on:
@@ -31,7 +32,6 @@ services:
       - ${WEB_APP_PORT}:${WEB_APP_PORT}
     env_file:
       - .env
-
 
 volumes:
   postgres-data:
