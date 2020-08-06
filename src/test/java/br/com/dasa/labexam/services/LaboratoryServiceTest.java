@@ -37,16 +37,16 @@ class LaboratoryServiceTest {
     final int TOTAL_OF_LABS = 3;
     List<Laboratory> laboratoriesList = new ArrayList<Laboratory>();
 
-    for (int i = 0; i++ < TOTAL_OF_LABS;)
+    for (int i = 0; i++ < TOTAL_OF_LABS; )
       laboratoriesList.add(new Laboratory());
 
     Mockito.when(laboratoryRepository.findAll()).thenReturn(laboratoriesList);
 
     // When
-    List<LaboratoryDTO> laboratoryDTOListLaboratories = laboratoryService.getAllLaboratories();
+    List<LaboratoryDTO> laboratoryDTOList = laboratoryService.getAllLaboratories();
 
     // Then
-    assertEquals(3, laboratoryDTOListLaboratories.size());
+    assertEquals(3, laboratoryDTOList.size());
   }
 
 }
