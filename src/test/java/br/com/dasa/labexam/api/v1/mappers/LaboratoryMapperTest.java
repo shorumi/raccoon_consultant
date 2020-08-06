@@ -3,6 +3,7 @@ package br.com.dasa.labexam.api.v1.mappers;
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.entities.Laboratory;
 import br.com.dasa.labexam.entities.Status;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
@@ -16,8 +17,9 @@ class LaboratoryMapperTest {
   LaboratoryMapper laboratoryMapper = LaboratoryMapper.INSTANCE;
 
   @Test
+  @DisplayName("Validates that a laboratory entity could be mapped to a DTO and it's properties are accessible")
   public void laboratoryToLaboratoryDTO() throws Exception {
-    // given
+    // Given
     Laboratory laboratory = new Laboratory();
     laboratory.setName("Chuck Norris");
     laboratory.setAddress("38, Charles bronson street");
@@ -26,10 +28,10 @@ class LaboratoryMapperTest {
     laboratory.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
     laboratory.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
-    // when
+    // When
     LaboratoryDTO laboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(laboratory);
 
-    // then
+    // Then
     assertEquals(1L, laboratoryDTO.getId());
     assertEquals("Chuck Norris", laboratoryDTO.getName());
     assertEquals("38, Charles bronson street", laboratoryDTO.getAddress());
