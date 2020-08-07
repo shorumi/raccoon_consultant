@@ -12,4 +12,7 @@ public interface LaboratoryMapper {
 
   @Mapping(source = "id", target = "id")
   LaboratoryDTO laboratoryToLaboratoryDTO(Laboratory laboratory);
+
+  @Mapping(source = "id", target = "id")
+  Laboratory laboratoryDtoToLaboratory(LaboratoryDTO laboratoryDTO);
 }
