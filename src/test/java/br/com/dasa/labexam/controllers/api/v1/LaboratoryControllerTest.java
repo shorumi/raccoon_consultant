@@ -15,9 +15,8 @@ import org.mockito.Mockito;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -36,6 +35,9 @@ import java.util.List;
 @ExtendWith(MockitoExtension.class)
 class LaboratoryControllerTest extends AbstractRestHelperController {
 
+  LaboratoryDTO laboratoryDTO = new LaboratoryDTO();
+  LaboratoryDTO returnedLaboratoryDTO = new LaboratoryDTO();
+
   @Mock
   LaboratoryService laboratoryService;
 
@@ -47,6 +49,15 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   @BeforeEach
   public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.standaloneSetup(laboratoryController).build();
+
+    laboratoryDTO.setName("Charles Bronson Lab");
+    laboratoryDTO.setAddress("Bruce Lee street");
+    laboratoryDTO.setStatus(Status.ACTIVE);
+
+    returnedLaboratoryDTO.setName(laboratoryDTO.getName());
+    returnedLaboratoryDTO.setAddress(laboratoryDTO.getAddress());
+    returnedLaboratoryDTO.setStatus(laboratoryDTO.getStatus());
+    returnedLaboratoryDTO.setLaboratoryUrl("/api/v1/laboratories/1");
   }
 
 
@@ -111,21 +122,9 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   }
 
   @Test
-  @DisplayName("Make a REST POST request to the Laboratory Controller create action and creates a Lab resource")
+  @DisplayName("Makes a REST POST request to the Laboratory Controller create action and creates a Lab resource")
   public void testCreate() throws Exception {
     // Given
-    LaboratoryDTO laboratoryDTO = new LaboratoryDTO();
-    laboratoryDTO.setName("Charles Bronson Lab");
-    laboratoryDTO.setAddress("Bruce Lee street");
-    laboratoryDTO.setStatus(Status.ACTIVE);
-
-    LaboratoryDTO returnedLaboratoryDTO = new LaboratoryDTO();
-
-    returnedLaboratoryDTO.setName(laboratoryDTO.getName());
-    returnedLaboratoryDTO.setAddress(laboratoryDTO.getAddress());
-    returnedLaboratoryDTO.setStatus(laboratoryDTO.getStatus());
-    returnedLaboratoryDTO.setLaboratoryUrl("/api/v1/laboratories/1");
-
     Mockito.when(laboratoryService.createNewLaboratory(laboratoryDTO)).thenReturn(returnedLaboratoryDTO);
 
     // When & Then
@@ -141,4 +140,28 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
     .andExpect(MockMvcResultMatchers.jsonPath("$.laboratory_url", equalTo("/api/v1/laboratories/1")));
   }
 
+  @Test
+  @DisplayName("Makes a REST PUT request to the Laboratory Controller update action and updates a Lab resource")
+  public void testUpdate() throws Exception {
+    // Given
+    Mockito.when(
+            laboratoryService.saveLaboratoryByDTO(
+                    anyLong(), any(LaboratoryDTO.class))
+    ).thenReturn(returnedLaboratoryDTO);
+
+    // When & Then
+    mockMvc.perform(MockMvcRequestBuilders
+            .put("/api/v1/laboratories/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(laboratoryDTO)))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo("Charles Bronson Lab")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.address", equalTo("Bruce Lee street")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status", equalTo("ACTIVE")))
+            .andExpect(
+                    MockMvcResultMatchers.jsonPath(
+                            "$.laboratory_url", equalTo("/api/v1/laboratories/1")
+                    )
+            );
+  }
 }

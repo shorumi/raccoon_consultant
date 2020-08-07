@@ -76,7 +76,7 @@ class LaboratoryServiceTest {
     assertEquals(laboratoryDTO.getName(), savedLaboratoryDTO.getName());
     assertEquals(laboratoryDTO.getAddress(), savedLaboratoryDTO.getAddress());
     assertEquals(laboratoryDTO.getStatus(), savedLaboratoryDTO.getStatus());
-    assertEquals("/api/v1/laboratory/1", savedLaboratoryDTO.getLaboratoryUrl());
+    assertEquals("/api/v1/laboratories/1", savedLaboratoryDTO.getLaboratoryUrl());
   }
 
   @Test

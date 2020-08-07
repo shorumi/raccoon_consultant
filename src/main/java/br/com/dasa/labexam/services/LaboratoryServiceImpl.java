@@ -2,6 +2,7 @@ package br.com.dasa.labexam.services;
 
 import br.com.dasa.labexam.api.v1.mappers.LaboratoryMapper;
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
+import br.com.dasa.labexam.controllers.api.v1.LaboratoryController;
 import br.com.dasa.labexam.entities.Laboratory;
 import br.com.dasa.labexam.repositories.LaboratoryRepository;
 import org.springframework.stereotype.Service;
@@ -30,13 +31,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
   @Override
   public LaboratoryDTO createNewLaboratory(LaboratoryDTO laboratoryDto) {
-    Laboratory laboratory = laboratoryMapper.laboratoryDtoToLaboratory(laboratoryDto);
-    Laboratory savedLaboratory = laboratoryRepository.save(laboratory);
-    LaboratoryDTO returnedLaboratoryDto = laboratoryMapper.laboratoryToLaboratoryDTO(savedLaboratory);
-
-    returnedLaboratoryDto.setLaboratoryUrl("/api/v1/laboratory/" + savedLaboratory.getId());
-
-    return returnedLaboratoryDto;
+    return saveAndReturnDTO(laboratoryMapper.laboratoryDtoToLaboratory(laboratoryDto));
   }
 
   @Override
@@ -49,12 +44,14 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
   private LaboratoryDTO saveAndReturnDTO(Laboratory laboratory) {
     Laboratory savedLaboratory = laboratoryRepository.save(laboratory);
-    LaboratoryDTO returnLaboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(savedLaboratory);
+    LaboratoryDTO returnedLaboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(savedLaboratory);
 
-    returnLaboratoryDTO.setLaboratoryUrl("/api/v1/laboratories/" + savedLaboratory.getId());
+    returnedLaboratoryDTO.setLaboratoryUrl(getCustomerUrl(savedLaboratory.getId()));
 
-    return returnLaboratoryDTO;
+    return returnedLaboratoryDTO;
   }
 
-
+  private String getCustomerUrl(Long id) {
+    return LaboratoryController.BASE_URL + "/" + id;
+  }
 }
