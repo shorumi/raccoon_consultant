@@ -22,6 +22,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class LaboratoryServiceTest {
 
+  LaboratoryDTO laboratoryDTO = new LaboratoryDTO();
+  Laboratory savedLaboratory = new Laboratory();
+
   private static LaboratoryServiceImpl laboratoryService;
 
   @Mock
@@ -29,6 +32,15 @@ class LaboratoryServiceTest {
 
   @BeforeEach
   void setUp() throws Exception {
+    laboratoryDTO.setName("Bruce Leee");
+    laboratoryDTO.setAddress("Chuck Norris street");
+    laboratoryDTO.setStatus(Status.ACTIVE);
+
+    savedLaboratory.setName(laboratoryDTO.getName());
+    savedLaboratory.setAddress(laboratoryDTO.getAddress());
+    savedLaboratory.setStatus(laboratoryDTO.getStatus());
+    savedLaboratory.setId(1L);
+
     laboratoryService = new LaboratoryServiceImpl(LaboratoryMapper.INSTANCE, laboratoryRepository);
   }
 
@@ -55,17 +67,6 @@ class LaboratoryServiceTest {
   @DisplayName("Creates a new Laboratory")
   public void testCreateLaboratory() throws Exception {
     // Given
-    LaboratoryDTO laboratoryDTO = new LaboratoryDTO();
-    laboratoryDTO.setName("Bruce Leee");
-    laboratoryDTO.setAddress("Chuck Norris street");
-    laboratoryDTO.setStatus(Status.ACTIVE);
-
-    Laboratory savedLaboratory = new Laboratory();
-    savedLaboratory.setName(laboratoryDTO.getName());
-    savedLaboratory.setAddress(laboratoryDTO.getAddress());
-    savedLaboratory.setStatus(laboratoryDTO.getStatus());
-    savedLaboratory.setId(1L);
-
     Mockito.when(laboratoryRepository.save(any(Laboratory.class))).thenReturn(savedLaboratory);
 
     // When
@@ -76,7 +77,22 @@ class LaboratoryServiceTest {
     assertEquals(laboratoryDTO.getAddress(), savedLaboratoryDTO.getAddress());
     assertEquals(laboratoryDTO.getStatus(), savedLaboratoryDTO.getStatus());
     assertEquals("/api/v1/laboratory/1", savedLaboratoryDTO.getLaboratoryUrl());
-
   }
 
+  @Test
+  @DisplayName("Updates a Laboratory")
+  public void testUpdateLaboratory() throws Exception {
+    // Given
+    Mockito.when(laboratoryRepository.save(any(Laboratory.class))).thenReturn(savedLaboratory);
+
+    // When
+    LaboratoryDTO savedDTO = laboratoryService.saveLaboratoryByDTO(1L, laboratoryDTO);
+
+    // Then
+    assertEquals(laboratoryDTO.getName(), savedDTO.getName());
+    assertEquals(laboratoryDTO.getAddress(), savedDTO.getAddress());
+    assertEquals(laboratoryDTO.getStatus(), savedDTO.getStatus());
+    assertEquals("/api/v1/laboratories/1", savedDTO.getLaboratoryUrl());
+  }
 }
+

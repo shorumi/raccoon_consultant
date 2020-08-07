@@ -39,5 +39,22 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     return returnedLaboratoryDto;
   }
 
+  @Override
+  public LaboratoryDTO saveLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO) {
+    Laboratory laboratory = laboratoryMapper.laboratoryDtoToLaboratory(laboratoryDTO);
+    laboratory.setId(id);
+
+    return saveAndReturnDTO(laboratory);
+  }
+
+  private LaboratoryDTO saveAndReturnDTO(Laboratory laboratory) {
+    Laboratory savedLaboratory = laboratoryRepository.save(laboratory);
+    LaboratoryDTO returnLaboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(savedLaboratory);
+
+    returnLaboratoryDTO.setLaboratoryUrl("/api/v1/laboratories/" + savedLaboratory.getId());
+
+    return returnLaboratoryDTO;
+  }
+
 
 }
