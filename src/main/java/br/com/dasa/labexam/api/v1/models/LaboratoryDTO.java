@@ -2,6 +2,7 @@ package br.com.dasa.labexam.api.v1.models;
 
 
 import br.com.dasa.labexam.entities.Status;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,9 @@ public class LaboratoryDTO {
   Status status;
   Timestamp createdAt;
   Timestamp updatedAt;
+
+  @JsonProperty("laboratory_url")
+  private String laboratoryUrl;
 
   public LaboratoryDTO(Long id, String name, String address, Status status) {
     this.id = id;
