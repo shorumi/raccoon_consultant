@@ -1,12 +1,16 @@
 package br.com.dasa.labexam.controllers.api.v1;
 
+import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.api.v1.models.LaboratoryListDTO;
+import br.com.dasa.labexam.entities.Laboratory;
 import br.com.dasa.labexam.services.LaboratoryService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -21,8 +25,15 @@ public class LaboratoryController {
 
   @GetMapping
   public ResponseEntity<LaboratoryListDTO> index() {
-    return new ResponseEntity<LaboratoryListDTO>(
-            new LaboratoryListDTO(laboratoryService.getAllLaboratories()),HttpStatus.OK
+    return new ResponseEntity<>(
+            new LaboratoryListDTO(laboratoryService.getAllLaboratories()), HttpStatus.OK
     );
   }
+
+  @PostMapping
+  public ResponseEntity<LaboratoryDTO> create(@RequestBody LaboratoryDTO laboratoryDTO) {
+    return new ResponseEntity<>(laboratoryService.createNewLaboratory(laboratoryDTO), HttpStatus.CREATED);
+  }
+
+
 }

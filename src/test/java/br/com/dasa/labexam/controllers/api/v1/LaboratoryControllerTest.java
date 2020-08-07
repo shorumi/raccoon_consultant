@@ -2,6 +2,7 @@ package br.com.dasa.labexam.controllers.api.v1;
 
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.entities.Status;
+import br.com.dasa.labexam.helpers.AbstractRestHelperController;
 import br.com.dasa.labexam.services.LaboratoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,9 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,13 +26,15 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class LaboratoryControllerTest {
+class LaboratoryControllerTest extends AbstractRestHelperController {
 
   @Mock
   LaboratoryService laboratoryService;
@@ -93,15 +98,47 @@ class LaboratoryControllerTest {
             "}";
 
     // When & Then
-    MvcResult mvcResult = mockMvc.perform(get("/api/v1/laboratories/")
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+            .get("/api/v1/laboratories/")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.laboratories", hasSize(3)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.laboratories", hasSize(3)))
             .andReturn();
 
     String actual = mvcResult.getResponse().getContentAsString();
 
     JSONAssert.assertEquals(expected, actual, JSONCompareMode.LENIENT);
+  }
+
+  @Test
+  @DisplayName("Make a REST POST request to the Laboratory Controller create action and creates a Lab resource")
+  public void testCreate() throws Exception {
+    // Given
+    LaboratoryDTO laboratoryDTO = new LaboratoryDTO();
+    laboratoryDTO.setName("Charles Bronson Lab");
+    laboratoryDTO.setAddress("Bruce Lee street");
+    laboratoryDTO.setStatus(Status.ACTIVE);
+
+    LaboratoryDTO returnedLaboratoryDTO = new LaboratoryDTO();
+
+    returnedLaboratoryDTO.setName(laboratoryDTO.getName());
+    returnedLaboratoryDTO.setAddress(laboratoryDTO.getAddress());
+    returnedLaboratoryDTO.setStatus(laboratoryDTO.getStatus());
+    returnedLaboratoryDTO.setLaboratoryUrl("/api/v1/laboratories/1");
+
+    Mockito.when(laboratoryService.createNewLaboratory(laboratoryDTO)).thenReturn(returnedLaboratoryDTO);
+
+    // When & Then
+    mockMvc.perform(MockMvcRequestBuilders
+            .post("/api/v1/laboratories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(asJsonString(laboratoryDTO)))
+            .andExpect(status().isCreated())
+    .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo("Charles Bronson Lab")))
+    .andExpect(MockMvcResultMatchers.jsonPath("$.address", equalTo("Bruce Lee street")))
+    .andExpect(MockMvcResultMatchers.jsonPath("$.status", equalTo("ACTIVE")))
+    .andExpect(MockMvcResultMatchers.jsonPath("$.laboratory_url", equalTo("/api/v1/laboratories/1")));
   }
 
 }
