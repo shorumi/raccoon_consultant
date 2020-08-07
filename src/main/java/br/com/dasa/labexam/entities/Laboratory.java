@@ -6,6 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -30,12 +33,18 @@ public class Laboratory implements Serializable {
   private Timestamp updatedAt;
 
   @Column(name = "name")
+  @Size(max = 100)
+  @NotBlank(message = "Name is required")
   private String name;
 
   @Column(name = "address")
+  @Size(max = 255)
+  @NotBlank(message = "Address is required")
   private String address;
 
+  @Column(columnDefinition = "varchar(8) default 'ACTIVE'")
+  @NotNull(message = "Status should not be null")
   @Enumerated(value = EnumType.STRING)
-  private Status status;
+  private Status status = Status.ACTIVE;
 
 }
