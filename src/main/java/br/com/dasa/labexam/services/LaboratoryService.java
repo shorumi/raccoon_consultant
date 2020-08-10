@@ -8,5 +8,6 @@ public interface LaboratoryService {
   List<LaboratoryDTO> getAllLaboratories();
   LaboratoryDTO createNewLaboratory(LaboratoryDTO laboratoryDto);
   LaboratoryDTO saveLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO);
+  LaboratoryDTO patchLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO);
 }
 

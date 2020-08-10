@@ -3,6 +3,7 @@ package br.com.dasa.labexam.services;
 import br.com.dasa.labexam.api.v1.mappers.LaboratoryMapper;
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.controllers.api.v1.LaboratoryController;
+import br.com.dasa.labexam.custom.exceptions.ResourceNotFoundException;
 import br.com.dasa.labexam.entities.Laboratory;
 import br.com.dasa.labexam.repositories.LaboratoryRepository;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,32 @@ public class LaboratoryServiceImpl implements LaboratoryService {
 
     return returnedLaboratoryDTO;
   }
+
+  @Override
+  public LaboratoryDTO patchLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO) {
+    return laboratoryRepository.findById(id).map(laboratory -> {
+      if(laboratoryDTO.getName() != null) {
+        laboratory.setName(laboratoryDTO.getName());
+      }
+
+      if(laboratoryDTO.getAddress() != null) {
+        laboratory.setAddress(laboratoryDTO.getAddress());
+      }
+
+      if(laboratoryDTO.getStatus() != null) {
+        laboratory.setStatus(laboratoryDTO.getStatus());
+      }
+
+      LaboratoryDTO returnLaboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(
+              laboratoryRepository.save(laboratory)
+      );
+
+      returnLaboratoryDTO.setLaboratoryUrl(getCustomerUrl(id));
+
+      return returnLaboratoryDTO;
+    }).orElseThrow(ResourceNotFoundException::new);
+  }
+
 
   private String getCustomerUrl(Long id) {
     return LaboratoryController.BASE_URL + "/" + id;

@@ -46,4 +46,11 @@ public class LaboratoryController {
 
     return new ResponseEntity<>(laboratoryService.saveLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
   }
+
+  @PatchMapping({"/{id}"})
+  public ResponseEntity<LaboratoryDTO> patch(@PathVariable Long id, @RequestBody LaboratoryDTO laboratoryDTO) {
+    logger.info("Patching customer with id {}", id);
+
+    return new ResponseEntity<LaboratoryDTO>(laboratoryService.patchLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
+  }
 }

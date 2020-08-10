@@ -151,7 +151,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
 
     // When & Then
     mockMvc.perform(MockMvcRequestBuilders
-            .put("/api/v1/laboratories/1")
+            .put(LaboratoryController.BASE_URL + "/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJsonString(laboratoryDTO)))
             .andExpect(status().isOk())
@@ -160,7 +160,43 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
             .andExpect(MockMvcResultMatchers.jsonPath("$.status", equalTo("ACTIVE")))
             .andExpect(
                     MockMvcResultMatchers.jsonPath(
-                            "$.laboratory_url", equalTo("/api/v1/laboratories/1")
+                            "$.laboratory_url", equalTo(LaboratoryController.BASE_URL + "/1")
+                    )
+            );
+  }
+
+  @Test
+  @DisplayName(
+          "Makes a REST PATCH request to the Laboratory Controller patch action and updates a Lab resource, partially"
+  )
+  public void testPatch() throws Exception {
+    // Given
+
+    Mockito.when(
+            laboratoryService.patchLaboratoryByDTO(
+                    anyLong(), any(LaboratoryDTO.class))
+    ).thenReturn(returnedLaboratoryDTO);
+
+    laboratoryDTO.setName("Michael Jackson from outskirt");
+    laboratoryDTO.setStatus(Status.INACTIVE);
+    returnedLaboratoryDTO.setName(laboratoryDTO.getName());
+    returnedLaboratoryDTO.setStatus(laboratoryDTO.getStatus());
+
+
+    // When & Then
+    mockMvc.perform(MockMvcRequestBuilders
+    .patch(LaboratoryController.BASE_URL + "/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(laboratoryDTO)))
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath(
+                    "$.name", equalTo("Michael Jackson from outskirt"))
+            )
+            .andExpect(MockMvcResultMatchers.jsonPath("$.address", equalTo("Bruce Lee street")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status", equalTo("INACTIVE")))
+            .andExpect(
+                    MockMvcResultMatchers.jsonPath(
+                            "$.laboratory_url", equalTo(LaboratoryController.BASE_URL + "/1")
                     )
             );
   }
