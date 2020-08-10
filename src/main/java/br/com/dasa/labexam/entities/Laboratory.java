@@ -1,7 +1,7 @@
 package br.com.dasa.labexam.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,7 +13,10 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "laboratories")
 public class Laboratory implements Serializable {
