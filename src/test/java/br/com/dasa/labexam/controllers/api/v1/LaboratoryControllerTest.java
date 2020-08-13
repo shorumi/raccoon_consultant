@@ -65,15 +65,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   @DisplayName("Make a REST GET request to the Laboratory Controller index and returns a JSON with laboratories")
   public void testIndex() throws Exception {
     // Given
-    final int TOTAL_OF_LABS = 3;
-    List<LaboratoryDTO> laboratoriesList = new ArrayList<LaboratoryDTO>();
-
-    for (int i = 0; i++ < TOTAL_OF_LABS; )
-      laboratoriesList.add(
-              new LaboratoryDTO(
-                      (long) i, "Chuck Norris Lab: " + i, "Chuck Norris Street" + i, Status.ACTIVE
-              )
-      );
+    List<LaboratoryDTO> laboratoriesList = instantiateLabotarories(3, Status.ACTIVE);
 
     Mockito.when(laboratoryService.getAllLaboratories()).thenReturn(laboratoriesList);
 
@@ -209,6 +201,19 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
             .andExpect(status().isOk());
 
     Mockito.verify(laboratoryService).deleteLogicallyLaboratoryById(anyLong());
+  }
+
+  private List<LaboratoryDTO> instantiateLabotarories(Integer quantity, Status status) {
+    final int TOTAL_OF_LABS = quantity;
+
+    List<LaboratoryDTO> laboratoriesList = new ArrayList<LaboratoryDTO>();
+
+    for (int i = 0; i++ < TOTAL_OF_LABS; )
+      laboratoriesList.add(
+              new LaboratoryDTO((long) i, "Chuck Norris Lab: " + i, "Chuck Norris Street" + i, status)
+      );
+
+    return laboratoriesList;
   }
 
 }
