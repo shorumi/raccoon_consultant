@@ -35,7 +35,7 @@ public class LaboratoryServiceIntegrationTest {
 
   @Test
   @DisplayName("Patch Address property")
-  public void testIndex() throws Exception {
+  public void testPatch() throws Exception {
     // Given
     laboratoryRepository.save(laboratory);
 

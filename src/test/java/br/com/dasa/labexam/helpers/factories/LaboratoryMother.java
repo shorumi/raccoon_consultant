@@ -9,6 +9,7 @@ public class LaboratoryMother {
             .id(1L)
             .name("Mr. Pickles")
             .address("Veggies street")
-            .status(Status.ACTIVE);
+            .status(Status.ACTIVE)
+            .deleted(false);
   }
 }

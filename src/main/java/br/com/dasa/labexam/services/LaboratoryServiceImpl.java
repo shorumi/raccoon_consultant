@@ -77,6 +77,11 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     }).orElseThrow(ResourceNotFoundException::new);
   }
 
+  @Override
+  public void deleteLogicallyLaboratoryById(Long id) {
+    laboratoryRepository.deleteById(id);
+  }
+
 
   private String getCustomerUrl(Long id) {
     return LaboratoryController.BASE_URL + "/" + id;

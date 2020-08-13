@@ -9,5 +9,6 @@ public interface LaboratoryService {
   LaboratoryDTO createNewLaboratory(LaboratoryDTO laboratoryDto);
   LaboratoryDTO saveLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO);
   LaboratoryDTO patchLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO);
+  void deleteLogicallyLaboratoryById(Long id);
 }
 

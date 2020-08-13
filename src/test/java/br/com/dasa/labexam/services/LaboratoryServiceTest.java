@@ -18,6 +18,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LaboratoryServiceTest {
@@ -93,6 +95,20 @@ class LaboratoryServiceTest {
     assertEquals(laboratoryDTO.getAddress(), savedDTO.getAddress());
     assertEquals(laboratoryDTO.getStatus(), savedDTO.getStatus());
     assertEquals("/api/v1/laboratories/1", savedDTO.getLaboratoryUrl());
+  }
+
+  @Test
+  @DisplayName("Deletes logically a laboratory")
+  public void testDeleteLogicallyLaboratory() throws Exception {
+    // Given
+    Long id = 1L;
+
+    // When
+    laboratoryRepository.deleteById(id);
+
+    // Then
+    Mockito.verify(laboratoryRepository, times(1)).deleteById(anyLong());
+
   }
 }
 
