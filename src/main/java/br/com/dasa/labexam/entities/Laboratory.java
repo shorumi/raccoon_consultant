@@ -2,10 +2,12 @@ package br.com.dasa.labexam.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +20,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@SQLDelete(sql = "UPDATE laboratories SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 @Table(name = "laboratories")
 public class Laboratory implements Serializable {
 
@@ -49,5 +53,8 @@ public class Laboratory implements Serializable {
   @NotNull(message = "Status should not be null")
   @Enumerated(value = EnumType.STRING)
   private Status status = Status.ACTIVE;
+
+  @Column(name = "deleted")
+  private Boolean deleted;
 
 }

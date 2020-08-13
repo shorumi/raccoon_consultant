@@ -35,6 +35,9 @@ public class LaboratoryDTO {
   @JsonProperty("laboratory_url")
   String laboratoryUrl;
 
+  @Column(name = "deleted")
+  Boolean deleted = false;
+
   public LaboratoryDTO(Long id, String name, String address, Status status) {
     this.id = id;
     this.name = name;
