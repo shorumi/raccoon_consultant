@@ -110,7 +110,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
 
     // When & Then
     MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-            .get("/api/v1/laboratories/")
+            .get(LaboratoryController.BASE_URL)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(MockMvcResultMatchers.jsonPath("$.laboratories", hasSize(3)))
@@ -129,7 +129,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
 
     // When & Then
     mockMvc.perform(MockMvcRequestBuilders
-            .post("/api/v1/laboratories")
+            .post(LaboratoryController.BASE_URL)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .content(asJsonString(laboratoryDTO)))
@@ -200,4 +200,15 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
                     )
             );
   }
+
+  @Test
+  @DisplayName("REST Delete request to the Laboratory Controller, delete a resource logically")
+  public void testLogicallyDelete() throws Exception {
+    mockMvc.perform(MockMvcRequestBuilders.delete(LaboratoryController.BASE_URL + "/1")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+
+    Mockito.verify(laboratoryService).deleteLogicallyLaboratoryById(anyLong());
+  }
+
 }

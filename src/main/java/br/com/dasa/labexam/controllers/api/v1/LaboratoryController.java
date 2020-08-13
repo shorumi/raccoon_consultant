@@ -53,4 +53,12 @@ public class LaboratoryController {
 
     return new ResponseEntity<LaboratoryDTO>(laboratoryService.patchLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
   }
+
+  @DeleteMapping({"/{id}"})
+  public ResponseEntity<Void> delete(@PathVariable Long id){
+
+    laboratoryService.deleteLogicallyLaboratoryById(id);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
