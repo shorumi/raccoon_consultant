@@ -1,6 +1,7 @@
 package br.com.dasa.labexam.controllers.api.v1;
 
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
+import br.com.dasa.labexam.entities.Laboratory;
 import br.com.dasa.labexam.entities.Status;
 import br.com.dasa.labexam.helpers.AbstractRestHelperController;
 import br.com.dasa.labexam.services.LaboratoryService;
@@ -17,6 +18,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -196,11 +198,67 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   @Test
   @DisplayName("REST Delete request to the Laboratory Controller, delete a resource logically")
   public void testLogicallyDelete() throws Exception {
+    // When && Then
     mockMvc.perform(MockMvcRequestBuilders.delete(LaboratoryController.BASE_URL + "/1")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
     Mockito.verify(laboratoryService).deleteLogicallyLaboratoryById(anyLong());
+  }
+
+  @Test
+  @DisplayName("Makes a GET REST request filtering by ACTIVE status parameter")
+  public void testFindByStatusParam() throws Exception {
+    // Given
+    List<LaboratoryDTO> laboratoriesDTOList = instantiateLabotarories(3, Status.ACTIVE);
+
+    Mockito.when(laboratoryService.findAllByStatus(Status.ACTIVE)).thenReturn(laboratoriesDTOList);
+
+    String expected = "" +
+            "{" +
+            "laboratories:" +
+            "[" +
+            "{" +
+            "id:1," +
+            "name:\"Chuck Norris Lab: 1\"," +
+            "address: \"Chuck Norris Street1\"," +
+            "status: \"ACTIVE\"," +
+            "createdAt: null," +
+            "updatedAt: null" +
+            "}," +
+            "{" +
+            "id: 2," +
+            "name: \"Chuck Norris Lab: 2\"," +
+            "address: \"Chuck Norris Street2\"," +
+            "status: \"ACTIVE\"," +
+            "createdAt: null," +
+            "updatedAt: null" +
+            "}," +
+            "{" +
+            "id: 3," +
+            "name: \"Chuck Norris Lab: 3\"," +
+            "address: \"Chuck Norris Street3\"," +
+            "status: \"ACTIVE\"," +
+            "createdAt: null," +
+            "updatedAt: null" +
+            "}" +
+            "]" +
+            "}";
+
+    // When & Then
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+            .get(LaboratoryController.BASE_URL + "/findByStatus")
+            .param("status", "ACTIVE")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.laboratories", hasSize(3)))
+            .andReturn();
+
+    String actual = mvcResult.getResponse().getContentAsString();
+
+    JSONAssert.assertEquals(expected, actual, JSONCompareMode.LENIENT);
+
   }
 
   private List<LaboratoryDTO> instantiateLabotarories(Integer quantity, Status status) {

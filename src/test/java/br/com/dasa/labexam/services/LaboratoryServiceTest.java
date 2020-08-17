@@ -13,7 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,11 +54,7 @@ class LaboratoryServiceTest {
   @DisplayName("Creates 3 mocked laboratories and then returns a list of Laboratory' DTO")
   public void testGetThreeMockedLaboratories() throws Exception {
     // Given
-    final int TOTAL_OF_LABS = 3;
-    List<Laboratory> laboratoriesList = new ArrayList<Laboratory>();
-
-    for (int i = 0; i++ < TOTAL_OF_LABS; )
-      laboratoriesList.add(new Laboratory());
+    List<Laboratory> laboratoriesList = instantiateLabotarories(3, Status.ACTIVE);
 
     Mockito.when(laboratoryRepository.findAll()).thenReturn(laboratoriesList);
 
@@ -108,7 +108,69 @@ class LaboratoryServiceTest {
 
     // Then
     Mockito.verify(laboratoryRepository, times(1)).deleteById(anyLong());
+  }
 
+  @Test
+  @DisplayName("Find all laboratories by status ACTIVE")
+  public void testFindAllActiveLaboratories() throws Exception {
+    // Given
+    List<Laboratory> laboratoriesList = instantiateLabotarories(3, Status.ACTIVE);
+
+    Mockito.when(laboratoryRepository.findAllByStatus(Status.ACTIVE)).thenReturn(laboratoriesList);
+
+    // When
+    List<LaboratoryDTO> activeStatusLaboratories = laboratoryService.findAllByStatus(Status.ACTIVE);
+
+    // Then
+    assertEquals(3, activeStatusLaboratories.size());
+
+  }
+
+  @Test
+  @DisplayName("Find all laboratories by status INACTIVE")
+  public void testFindAllInactiveLaboratories() throws Exception {
+    // Given
+    List<Laboratory> laboratoriesList = instantiateLabotarories(3, Status.INACTIVE);
+    Date date = new Date();
+    Laboratory laboratory = new Laboratory(
+            1L,
+            new Timestamp(date.getTime()),
+            new Timestamp(date.getTime()),
+            "Bruce Lee",
+            "Fighters Street",
+            Status.ACTIVE,
+            true
+    );
+
+    Mockito.when(laboratoryRepository.findAllByStatus(Status.INACTIVE)).thenReturn(laboratoriesList);
+
+    // When
+    List<LaboratoryDTO> activeStatusLaboratories = laboratoryService.findAllByStatus(Status.INACTIVE);
+
+    // Then
+    assertEquals(3, activeStatusLaboratories.size());
+
+  }
+
+  private List<Laboratory> instantiateLabotarories(Integer quantity, Status status) {
+    final int TOTAL_OF_LABS = quantity;
+    List<Laboratory> laboratoriesList = new ArrayList<Laboratory>();
+    Date date = new Date();
+
+    for (int i = 0; i++ < TOTAL_OF_LABS; )
+      laboratoriesList.add(
+              new Laboratory(
+                      1L,
+                      new Timestamp(date.getTime()),
+                      new Timestamp(date.getTime()),
+                      "Bruce Lee",
+                      "Fighters Street",
+                      status,
+                      true
+              )
+      );
+
+    return laboratoriesList;
   }
 }
 

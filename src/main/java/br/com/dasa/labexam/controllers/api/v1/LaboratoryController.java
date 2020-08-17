@@ -2,6 +2,7 @@ package br.com.dasa.labexam.controllers.api.v1;
 
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.api.v1.models.LaboratoryListDTO;
+import br.com.dasa.labexam.entities.Status;
 import br.com.dasa.labexam.services.LaboratoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,5 +61,12 @@ public class LaboratoryController {
     laboratoryService.deleteLogicallyLaboratoryById(id);
 
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @RequestMapping("findByStatus")
+  public ResponseEntity<LaboratoryListDTO> getAllByStatus(@RequestParam(value = "status") Status status) {
+    return new ResponseEntity<>(
+            new LaboratoryListDTO(laboratoryService.findAllByStatus(status)), HttpStatus.OK
+    );
   }
 }
