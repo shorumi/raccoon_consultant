@@ -3,6 +3,7 @@ package br.com.dasa.labexam.services;
 import br.com.dasa.labexam.api.v1.mappers.LaboratoryMapper;
 import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.entities.Laboratory;
+import br.com.dasa.labexam.entities.Status;
 import br.com.dasa.labexam.helpers.factories.LaboratoryMother;
 import br.com.dasa.labexam.repositories.LaboratoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +60,28 @@ public class LaboratoryServiceIntegrationTest {
     assertNotNull(updatedLaboratory);
     assertEquals(expectedAddress, updatedLaboratory.getAddress());
     assertNotEquals(actualAddress, updatedLaboratory.getAddress());
+  }
+
+  @Test
+  @DisplayName("Find all laboratories filtered by Active/Inactive status")
+  public void testGetAllLabsByActiveInactiveStatus() throws Exception {
+    // Given
+    Laboratory inactiveLaboratory = LaboratoryMother.complete().status(Status.INACTIVE).build();
+    Laboratory activeLaboratory = LaboratoryMother.complete().status(Status.ACTIVE).build();
+    List<Laboratory> laboratoryList = Arrays.asList(inactiveLaboratory, activeLaboratory);
+
+    laboratoryRepository.saveAll(laboratoryList);
+
+    // When
+    List<LaboratoryDTO> activeLabsList = laboratoryService.findAllByStatus(Status.ACTIVE);
+    List<LaboratoryDTO> inactiveLabsList = laboratoryService.findAllByStatus(Status.INACTIVE);
+    List<LaboratoryDTO> allLabsList = laboratoryService.getAllLaboratories();
+
+    // Then
+    assertNotNull(activeLabsList);
+    assertEquals(1, activeLabsList.size());
+    assertEquals(1, inactiveLabsList.size());
+    assertEquals(2, allLabsList.size());
   }
 
   private Long getLaboratoryIdValue() {

@@ -5,6 +5,7 @@ import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
 import br.com.dasa.labexam.controllers.api.v1.LaboratoryController;
 import br.com.dasa.labexam.custom.exceptions.ResourceNotFoundException;
 import br.com.dasa.labexam.entities.Laboratory;
+import br.com.dasa.labexam.entities.Status;
 import br.com.dasa.labexam.repositories.LaboratoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,11 @@ public class LaboratoryServiceImpl implements LaboratoryService {
   public List<LaboratoryDTO> getAllLaboratories() {
     return laboratoryRepository.findAll()
             .stream()
-            .map(laboratoryMapper::laboratoryToLaboratoryDTO)
+            .map(laboratory -> {
+              LaboratoryDTO laboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(laboratory);
+              laboratoryDTO.setLaboratoryUrl(getCustomerUrl(laboratory.getId()));
+              return laboratoryDTO;
+            })
             .collect(Collectors.toList());
   }
 
@@ -82,6 +87,17 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     laboratoryRepository.deleteById(id);
   }
 
+  @Override
+  public List<LaboratoryDTO> findAllByStatus(Status status) {
+    return laboratoryRepository.findAllByStatus(status)
+            .stream()
+            .map(laboratory -> {
+              LaboratoryDTO laboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(laboratory);
+              laboratoryDTO.setLaboratoryUrl(getCustomerUrl(laboratory.getId()));
+              return laboratoryDTO;
+            })
+            .collect(Collectors.toList());
+  }
 
   private String getCustomerUrl(Long id) {
     return LaboratoryController.BASE_URL + "/" + id;
