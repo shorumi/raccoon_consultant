@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  postgres_lab_exam:
+  postgres_raccoon_consultant:
     image: postgres:${PG_MAJOR}
     volumes:
       - .psqlrc:/root/.psqlrc:ro
@@ -12,10 +12,15 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     environment:
-      PSQL_HISTFILE: /root/log/.psql_history
-      POSTGRES_USER: ${PG_USR}
-      POSTGRES_PASSWORD: ${PG_PWD}
-      POSTGRES_DB: ${DATABASE_NAME}
+      - PSQL_HISTFILE=/root/log/.psql_history
+      - POSTGRES_USER=${PG_USR}
+      - POSTGRES_PASSWORD=${PG_PWD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${PG_USR} -d ${DATABASE_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     env_file:
       - .env
 
@@ -23,9 +28,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: lab-exam-app
+    image: raccoon-consultant-app
+    command: "java -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=container -Dspring.profiles.active=postgres -jar /app/raccoon_consultant-0.0.1-SNAPSHOT.jar"
     depends_on:
-      - postgres_lab_exam
+      - postgres_raccoon_consultant
     expose:
       - ${WEB_APP_PORT}
     ports:
@@ -39,4 +45,4 @@ volumes:
 networks:
   default:
     external:
-      name: dasa_default
+      name: raccoon_default
