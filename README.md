@@ -35,7 +35,7 @@ POST LABORATORIES
 curl -i -H -v "Accept: application/json" \
 -H 'Content-Type:application/json' \
 -X POST \
--d '{"name": "Chuck Norris2", "address": "Chuck Street2", "status": "INACTIVE"}' http://localhost:8080/api/v1/laboratories \
+-d '{"name": "Chuck Norris2", "address": "Chuck Street2", "status": "INACTIVE"}' http://localhost:8080/api/v1/laboratories
 
 ========================================================================================================================
 
