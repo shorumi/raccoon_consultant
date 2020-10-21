@@ -1,12 +1,12 @@
-package br.com.dasa.labexam.services;
+package io.raccoonconsultant.services;
 
-import br.com.dasa.labexam.api.v1.mappers.LaboratoryMapper;
-import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
-import br.com.dasa.labexam.controllers.api.v1.LaboratoryController;
-import br.com.dasa.labexam.custom.exceptions.ResourceNotFoundException;
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
-import br.com.dasa.labexam.repositories.LaboratoryRepository;
+import io.raccoonconsultant.api.v1.mappers.LaboratoryMapper;
+import io.raccoonconsultant.api.v1.models.LaboratoryDTO;
+import io.raccoonconsultant.controllers.api.v1.LaboratoryController;
+import io.raccoonconsultant.custom.exceptions.ResourceNotFoundException;
+import io.raccoonconsultant.entities.Laboratory;
+import io.raccoonconsultant.entities.Status;
+import io.raccoonconsultant.repositories.LaboratoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
             .stream()
             .map(laboratory -> {
               LaboratoryDTO laboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(laboratory);
-              laboratoryDTO.setLaboratoryUrl(getCustomerUrl(laboratory.getId()));
+              laboratoryDTO.setLaboratoryUrl(getLaboratoryUrl(laboratory.getId()));
               return laboratoryDTO;
             })
             .collect(Collectors.toList());
@@ -41,7 +41,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
   }
 
   @Override
-  public LaboratoryDTO saveLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO) {
+  public LaboratoryDTO putLaboratoryByDTO(Long id, LaboratoryDTO laboratoryDTO) {
     Laboratory laboratory = laboratoryMapper.laboratoryDtoToLaboratory(laboratoryDTO);
     laboratory.setId(id);
 
@@ -52,7 +52,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
     Laboratory savedLaboratory = laboratoryRepository.save(laboratory);
     LaboratoryDTO returnedLaboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(savedLaboratory);
 
-    returnedLaboratoryDTO.setLaboratoryUrl(getCustomerUrl(savedLaboratory.getId()));
+    returnedLaboratoryDTO.setLaboratoryUrl(getLaboratoryUrl(savedLaboratory.getId()));
 
     return returnedLaboratoryDTO;
   }
@@ -76,10 +76,10 @@ public class LaboratoryServiceImpl implements LaboratoryService {
               laboratoryRepository.save(laboratory)
       );
 
-      returnLaboratoryDTO.setLaboratoryUrl(getCustomerUrl(id));
+      returnLaboratoryDTO.setLaboratoryUrl(getLaboratoryUrl(id));
 
       return returnLaboratoryDTO;
-    }).orElseThrow(ResourceNotFoundException::new);
+    }).orElseThrow(() -> new ResourceNotFoundException("Invalid laboratory id: " + id + " or data passed"));
   }
 
   @Override
@@ -93,13 +93,24 @@ public class LaboratoryServiceImpl implements LaboratoryService {
             .stream()
             .map(laboratory -> {
               LaboratoryDTO laboratoryDTO = laboratoryMapper.laboratoryToLaboratoryDTO(laboratory);
-              laboratoryDTO.setLaboratoryUrl(getCustomerUrl(laboratory.getId()));
+              laboratoryDTO.setLaboratoryUrl(getLaboratoryUrl(laboratory.getId()));
               return laboratoryDTO;
             })
             .collect(Collectors.toList());
   }
 
-  private String getCustomerUrl(Long id) {
+  @Override
+  public LaboratoryDTO getLaboratoryById(Long id) {
+    return laboratoryRepository.findById(id)
+            .map(laboratoryMapper::laboratoryToLaboratoryDTO)
+            .map(laboratoryDTO -> {
+              laboratoryDTO.setLaboratoryUrl(getLaboratoryUrl(id));
+              return laboratoryDTO;
+            })
+            .orElseThrow(() -> new ResourceNotFoundException("Invalid laboratory id: " + id));
+  }
+
+  private String getLaboratoryUrl(Long id) {
     return LaboratoryController.BASE_URL + "/" + id;
   }
 }
