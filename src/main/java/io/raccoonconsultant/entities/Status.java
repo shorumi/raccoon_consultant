@@ -1,3 +1,3 @@
-package br.com.dasa.labexam.entities;
+package io.raccoonconsultant.entities;
 
 public enum Status { ACTIVE, INACTIVE }

@@ -1,12 +1,12 @@
-package br.com.dasa.labexam.bootstrap;
+package io.raccoonconsultant.bootstrap;
 
-import br.com.dasa.labexam.entities.Exam;
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
-import br.com.dasa.labexam.entities.Type;
-import br.com.dasa.labexam.repositories.ExamRepository;
-import br.com.dasa.labexam.repositories.LaboratoryRepository;
-import br.com.dasa.labexam.repositories.TypeRepository;
+import io.raccoonconsultant.entities.Exam;
+import io.raccoonconsultant.entities.Laboratory;
+import io.raccoonconsultant.entities.Status;
+import io.raccoonconsultant.entities.Type;
+import io.raccoonconsultant.repositories.ExamRepository;
+import io.raccoonconsultant.repositories.LaboratoryRepository;
+import io.raccoonconsultant.repositories.TypeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

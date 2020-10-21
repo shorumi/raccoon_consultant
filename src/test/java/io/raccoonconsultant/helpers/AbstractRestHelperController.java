@@ -1,4 +1,4 @@
-package br.com.dasa.labexam.helpers;
+package io.raccoonconsultant.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

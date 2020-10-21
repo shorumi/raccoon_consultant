@@ -1,4 +1,4 @@
-package br.com.dasa.labexam.api.v1.models;
+package io.raccoonconsultant.api.v1.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

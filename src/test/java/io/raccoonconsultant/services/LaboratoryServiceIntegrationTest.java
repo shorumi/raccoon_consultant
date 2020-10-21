@@ -1,11 +1,11 @@
-package br.com.dasa.labexam.services;
+package io.raccoonconsultant.services;
 
-import br.com.dasa.labexam.api.v1.mappers.LaboratoryMapper;
-import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
-import br.com.dasa.labexam.helpers.factories.LaboratoryMother;
-import br.com.dasa.labexam.repositories.LaboratoryRepository;
+import io.raccoonconsultant.api.v1.mappers.LaboratoryMapper;
+import io.raccoonconsultant.api.v1.models.LaboratoryDTO;
+import io.raccoonconsultant.entities.Laboratory;
+import io.raccoonconsultant.entities.Status;
+import io.raccoonconsultant.helpers.factories.LaboratoryMother;
+import io.raccoonconsultant.repositories.LaboratoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

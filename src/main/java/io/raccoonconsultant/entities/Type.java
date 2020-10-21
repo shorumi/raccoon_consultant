@@ -1,4 +1,4 @@
-package br.com.dasa.labexam.entities;
+package io.raccoonconsultant.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;

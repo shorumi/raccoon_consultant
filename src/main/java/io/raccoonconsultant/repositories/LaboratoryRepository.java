@@ -1,7 +1,7 @@
-package br.com.dasa.labexam.repositories;
+package io.raccoonconsultant.repositories;
 
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
+import io.raccoonconsultant.entities.Laboratory;
+import io.raccoonconsultant.entities.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

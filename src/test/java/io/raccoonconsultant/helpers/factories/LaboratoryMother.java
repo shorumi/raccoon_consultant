@@ -1,7 +1,7 @@
-package br.com.dasa.labexam.helpers.factories;
+package io.raccoonconsultant.helpers.factories;
 
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
+import io.raccoonconsultant.entities.Laboratory;
+import io.raccoonconsultant.entities.Status;
 
 import java.util.Random;
 

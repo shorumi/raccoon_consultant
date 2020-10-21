@@ -1,7 +1,7 @@
-package br.com.dasa.labexam.api.v1.mappers;
+package io.raccoonconsultant.api.v1.mappers;
 
-import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
-import br.com.dasa.labexam.entities.Laboratory;
+import io.raccoonconsultant.api.v1.models.LaboratoryDTO;
+import io.raccoonconsultant.entities.Laboratory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

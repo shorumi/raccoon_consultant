@@ -1,4 +1,4 @@
-package br.com.dasa.labexam.entities;
+package io.raccoonconsultant.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

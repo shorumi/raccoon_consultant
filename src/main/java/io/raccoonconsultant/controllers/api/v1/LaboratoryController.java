@@ -1,12 +1,11 @@
-package br.com.dasa.labexam.controllers.api.v1;
+package io.raccoonconsultant.controllers.api.v1;
 
-import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
-import br.com.dasa.labexam.api.v1.models.LaboratoryListDTO;
-import br.com.dasa.labexam.entities.Status;
-import br.com.dasa.labexam.services.LaboratoryService;
+import io.raccoonconsultant.api.v1.models.LaboratoryDTO;
+import io.raccoonconsultant.api.v1.models.LaboratoryListDTO;
+import io.raccoonconsultant.entities.Status;
+import io.raccoonconsultant.services.LaboratoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,7 @@ public class LaboratoryController {
 
   private final LaboratoryService laboratoryService;
 
-  public LaboratoryController(@Qualifier("laboratoryServiceImpl") LaboratoryService laboratoryService) {
+  public LaboratoryController(LaboratoryService laboratoryService) {
     this.laboratoryService = laboratoryService;
   }
 
@@ -45,14 +44,14 @@ public class LaboratoryController {
   public ResponseEntity<LaboratoryDTO> update(@PathVariable Long id, @RequestBody LaboratoryDTO laboratoryDTO) {
     logger.info("Updating customer with id {}", id);
 
-    return new ResponseEntity<>(laboratoryService.saveLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
+    return new ResponseEntity<>(laboratoryService.putLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
   }
 
   @PatchMapping({"/{id}"})
   public ResponseEntity<LaboratoryDTO> patch(@PathVariable Long id, @RequestBody LaboratoryDTO laboratoryDTO) {
     logger.info("Patching customer with id {}", id);
 
-    return new ResponseEntity<LaboratoryDTO>(laboratoryService.patchLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
+    return new ResponseEntity<>(laboratoryService.patchLaboratoryByDTO(id, laboratoryDTO), HttpStatus.OK);
   }
 
   @DeleteMapping({"/{id}"})
@@ -68,5 +67,10 @@ public class LaboratoryController {
     return new ResponseEntity<>(
             new LaboratoryListDTO(laboratoryService.findAllByStatus(status)), HttpStatus.OK
     );
+  }
+
+  @RequestMapping({"/{id}"})
+  public ResponseEntity<LaboratoryDTO> getLaboratoryById(@PathVariable Long id) {
+    return new ResponseEntity<>(laboratoryService.getLaboratoryById(id), HttpStatus.OK);
   }
 }
