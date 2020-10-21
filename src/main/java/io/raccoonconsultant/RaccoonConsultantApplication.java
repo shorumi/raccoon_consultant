@@ -1,4 +1,4 @@
-package br.com.dasa.labexam;
+package io.raccoonconsultant;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

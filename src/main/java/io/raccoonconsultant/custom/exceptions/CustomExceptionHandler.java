@@ -1,4 +1,4 @@
-package br.com.dasa.labexam.custom.exceptions;
+package io.raccoonconsultant.custom.exceptions;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
