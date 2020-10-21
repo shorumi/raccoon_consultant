@@ -34,3 +34,6 @@ build/
 
 # Ignore DOTENV file
 .env
+
+# MACOS FILES
+.DS_Store

@@ -1,0 +1,34 @@
+
+CREATE SEQUENCE public.hibernate_sequence;
+
+-- CREATE TYPE Status AS ENUM();
+
+CREATE TABLE IF NOT EXISTS laboratories (
+    id BIGINT PRIMARY KEY NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    status VARCHAR,
+    deleted boolean DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS types (
+    id BIGINT NOT NULL PRIMARY KEY,
+    name VARCHAR(100),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS exams (
+    id BIGINT PRIMARY KEY NOT NULL,
+    name VARCHAR(100),
+    status VARCHAR,
+    laboratory_id BIGINT NOT NULL,
+    type_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP,
+
+    FOREIGN KEY (laboratory_id) REFERENCES laboratories(id) ON DELETE CASCADE,
+    FOREIGN KEY (type_id) REFERENCES types(id) ON DELETE CASCADE
+);
