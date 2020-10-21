@@ -1,4 +1,4 @@
-package br.com.dasa.labexam.entities;
+package io.raccoonconsultant.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -7,7 +7,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -40,12 +40,12 @@ public class Laboratory implements Serializable {
 
   @Column(name = "name")
   @Size(max = 100)
-  @NotBlank(message = "Name is required")
+  @NotEmpty(message = "Name is required")
   private String name;
 
   @Column(name = "address")
   @Size(max = 255)
-  @NotBlank(message = "Address is required")
+  @NotEmpty(message = "Address is required")
   private String address;
 
   @Column(columnDefinition = "varchar(8) default 'ACTIVE'")
