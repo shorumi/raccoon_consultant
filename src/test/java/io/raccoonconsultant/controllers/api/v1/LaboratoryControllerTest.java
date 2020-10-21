@@ -1,10 +1,9 @@
-package br.com.dasa.labexam.controllers.api.v1;
+package io.raccoonconsultant.controllers.api.v1;
 
-import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
-import br.com.dasa.labexam.helpers.AbstractRestHelperController;
-import br.com.dasa.labexam.services.LaboratoryService;
+import io.raccoonconsultant.api.v1.models.LaboratoryDTO;
+import io.raccoonconsultant.entities.Status;
+import io.raccoonconsultant.helpers.AbstractRestHelperController;
+import io.raccoonconsultant.services.LaboratoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,8 +51,10 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   public void setUp() throws Exception {
     mockMvc = MockMvcBuilders.standaloneSetup(laboratoryController).build();
 
+    laboratoryDTO.setId((long) 1);
     laboratoryDTO.setName("Charles Bronson Lab");
     laboratoryDTO.setAddress("Bruce Lee street");
+    laboratoryDTO.setLaboratoryUrl(LaboratoryController.BASE_URL + "/1");
     laboratoryDTO.setStatus(Status.ACTIVE);
 
     returnedLaboratoryDTO.setName(laboratoryDTO.getName());
@@ -64,7 +65,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
 
 
   @Test
-  @DisplayName("Make a REST GET request to the Laboratory Controller index and returns a JSON with laboratories")
+  @DisplayName("REST GET request to the Laboratory Controller index and returns a JSON with laboratories")
   public void testIndex() throws Exception {
     // Given
     List<LaboratoryDTO> laboratoriesList = instantiateLabotarories(3, Status.ACTIVE);
@@ -80,24 +81,24 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
             "name:\"Chuck Norris Lab: 1\"," +
             "address: \"Chuck Norris Street1\"," +
             "status: \"ACTIVE\"," +
-            "createdAt: null," +
-            "updatedAt: null" +
+            "created_at: null," +
+            "updated_at: null" +
             "}," +
             "{" +
             "id: 2," +
             "name: \"Chuck Norris Lab: 2\"," +
             "address: \"Chuck Norris Street2\"," +
             "status: \"ACTIVE\"," +
-            "createdAt: null," +
-            "updatedAt: null" +
+            "created_at: null," +
+            "updated_at: null" +
             "}," +
             "{" +
             "id: 3," +
             "name: \"Chuck Norris Lab: 3\"," +
             "address: \"Chuck Norris Street3\"," +
             "status: \"ACTIVE\"," +
-            "createdAt: null," +
-            "updatedAt: null" +
+            "created_at: null," +
+            "updated_at: null" +
             "}" +
             "]" +
             "}";
@@ -116,7 +117,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   }
 
   @Test
-  @DisplayName("Makes a REST POST request to the Laboratory Controller create action and creates a Lab resource")
+  @DisplayName("REST POST request to the Laboratory Controller create action and creates a Lab resource")
   public void testCreate() throws Exception {
     // Given
     Mockito.when(laboratoryService.createNewLaboratory(laboratoryDTO)).thenReturn(returnedLaboratoryDTO);
@@ -135,11 +136,11 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   }
 
   @Test
-  @DisplayName("Makes a REST PUT request to the Laboratory Controller update action and updates a Lab resource")
+  @DisplayName("REST PUT request to the Laboratory Controller update action and updates a Lab resource")
   public void testUpdate() throws Exception {
     // Given
     Mockito.when(
-            laboratoryService.saveLaboratoryByDTO(
+            laboratoryService.putLaboratoryByDTO(
                     anyLong(), any(LaboratoryDTO.class))
     ).thenReturn(returnedLaboratoryDTO);
 
@@ -160,9 +161,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   }
 
   @Test
-  @DisplayName(
-          "Makes a REST PATCH request to the Laboratory Controller patch action and updates a Lab resource, partially"
-  )
+  @DisplayName("REST PATCH request to the Laboratory Controller patch action and updates a Lab resource, partially")
   public void testPatch() throws Exception {
     // Given
 
@@ -196,7 +195,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   }
 
   @Test
-  @DisplayName("REST Delete request to the Laboratory Controller, delete a resource logically")
+  @DisplayName("REST DELETE request to the Laboratory Controller, delete a resource logically")
   public void testLogicallyDelete() throws Exception {
     // When && Then
     mockMvc.perform(MockMvcRequestBuilders.delete(LaboratoryController.BASE_URL + "/1")
@@ -207,7 +206,7 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
   }
 
   @Test
-  @DisplayName("Makes a GET REST request filtering by ACTIVE status parameter")
+  @DisplayName("REST GET request filtering by ACTIVE status parameter")
   public void testFindByStatusParam() throws Exception {
     // Given
     List<LaboratoryDTO> laboratoriesDTOList = instantiateLabotarories(3, Status.ACTIVE);
@@ -223,24 +222,24 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
             "name:\"Chuck Norris Lab: 1\"," +
             "address: \"Chuck Norris Street1\"," +
             "status: \"ACTIVE\"," +
-            "createdAt: null," +
-            "updatedAt: null" +
+            "created_at: null," +
+            "updated_at: null" +
             "}," +
             "{" +
             "id: 2," +
             "name: \"Chuck Norris Lab: 2\"," +
             "address: \"Chuck Norris Street2\"," +
             "status: \"ACTIVE\"," +
-            "createdAt: null," +
-            "updatedAt: null" +
+            "created_at: null," +
+            "updated_at: null" +
             "}," +
             "{" +
             "id: 3," +
             "name: \"Chuck Norris Lab: 3\"," +
             "address: \"Chuck Norris Street3\"," +
             "status: \"ACTIVE\"," +
-            "createdAt: null," +
-            "updatedAt: null" +
+            "created_at: null," +
+            "updated_at: null" +
             "}" +
             "]" +
             "}";
@@ -259,6 +258,41 @@ class LaboratoryControllerTest extends AbstractRestHelperController {
 
     JSONAssert.assertEquals(expected, actual, JSONCompareMode.LENIENT);
 
+  }
+
+  @Test
+  @DisplayName("REST GET by ID request to the Laboratory Controller  and returns a JSON with laboratory")
+  public void testGetLaboratoryById() throws Exception {
+    // Given
+
+    String expected = "" +
+            "{" +
+            "id: 1," +
+            "name:\"Charles Bronson Lab\"," +
+            "address: \"Bruce Lee street\"," +
+            "status: \"ACTIVE\"," +
+            "created_at: null," +
+            "updated_at: null," +
+            "laboratory_url: \"/api/v1/laboratories/1\"" +
+            "}";
+
+    Mockito.when(laboratoryService.getLaboratoryById(anyLong())).thenReturn(laboratoryDTO);
+
+    // When & Then
+    MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
+            .get(LaboratoryController.BASE_URL + "/1")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo("Charles Bronson Lab")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.address", equalTo("Bruce Lee street")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status", equalTo("ACTIVE")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.laboratory_url", equalTo("/api/v1/laboratories/1")))
+            .andReturn();
+
+    String actual = mvcResult.getResponse().getContentAsString();
+
+    JSONAssert.assertEquals(expected, actual, JSONCompareMode.LENIENT);
   }
 
   private List<LaboratoryDTO> instantiateLabotarories(Integer quantity, Status status) {

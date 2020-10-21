@@ -1,10 +1,10 @@
-package br.com.dasa.labexam.services;
+package io.raccoonconsultant.services;
 
-import br.com.dasa.labexam.api.v1.mappers.LaboratoryMapper;
-import br.com.dasa.labexam.api.v1.models.LaboratoryDTO;
-import br.com.dasa.labexam.entities.Laboratory;
-import br.com.dasa.labexam.entities.Status;
-import br.com.dasa.labexam.repositories.LaboratoryRepository;
+import io.raccoonconsultant.api.v1.mappers.LaboratoryMapper;
+import io.raccoonconsultant.api.v1.models.LaboratoryDTO;
+import io.raccoonconsultant.entities.Laboratory;
+import io.raccoonconsultant.entities.Status;
+import io.raccoonconsultant.repositories.LaboratoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -88,7 +86,7 @@ class LaboratoryServiceTest {
     Mockito.when(laboratoryRepository.save(any(Laboratory.class))).thenReturn(savedLaboratory);
 
     // When
-    LaboratoryDTO savedDTO = laboratoryService.saveLaboratoryByDTO(1L, laboratoryDTO);
+    LaboratoryDTO savedDTO = laboratoryService.putLaboratoryByDTO(1L, laboratoryDTO);
 
     // Then
     assertEquals(laboratoryDTO.getName(), savedDTO.getName());
@@ -131,6 +129,22 @@ class LaboratoryServiceTest {
   public void testFindAllInactiveLaboratories() throws Exception {
     // Given
     List<Laboratory> laboratoriesList = instantiateLabotarories(3, Status.INACTIVE);
+
+    Mockito.when(laboratoryRepository.findAllByStatus(Status.INACTIVE)).thenReturn(laboratoriesList);
+
+    // When
+    List<LaboratoryDTO> activeStatusLaboratories = laboratoryService.findAllByStatus(Status.INACTIVE);
+
+    // Then
+    assertEquals(3, activeStatusLaboratories.size());
+
+  }
+
+  @Test
+  @DisplayName("Find laboratories by ID")
+  public void testFindLaboratoriesById() throws Exception {
+    // Given
+
     Date date = new Date();
     Laboratory laboratory = new Laboratory(
             1L,
@@ -142,13 +156,13 @@ class LaboratoryServiceTest {
             true
     );
 
-    Mockito.when(laboratoryRepository.findAllByStatus(Status.INACTIVE)).thenReturn(laboratoriesList);
+    Mockito.when(laboratoryRepository.findById(anyLong())).thenReturn(java.util.Optional.of(laboratory));
 
     // When
-    List<LaboratoryDTO> activeStatusLaboratories = laboratoryService.findAllByStatus(Status.INACTIVE);
+    LaboratoryDTO laboratoryDTO = laboratoryService.getLaboratoryById(1L);
 
     // Then
-    assertEquals(3, activeStatusLaboratories.size());
+    assertEquals("Bruce Lee", laboratoryDTO.getName());
 
   }
 
